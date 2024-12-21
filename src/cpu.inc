@@ -104,7 +104,7 @@ detect_cpu:
 	jmp	.cpu_freq
 
 .nec_v20:
-%ifdef MACHINE_HOMEBREW8088
+%ifdef MACHINE_HOMEBREW8088 or MACHINE_V50SBC
 ; Test for NEC V40
 ; NEC V40 has on-chip configuration registers at 0FFE0h-0FFFFh I/0 addresses.
 ; The code below tries to modify the value of 0FFFE0 register and read it back.
@@ -124,13 +124,17 @@ detect_cpu:
 	cmp	al,ah		; compare with the original value
 	jne	.not_v40
 	pop	dx
+%ifdef MACHINE_HOMEBREW8088
 	mov	si,msg_cpu_nec_v40
+%elifdef MACHINE_V50SBC
+	mov	si,msg_cpu_nec_v50
+%endif
 	call	print
 	jmp	.cpu_freq
 
 .not_v40:
 	pop	dx
-%endif ; MACHINE_HOMEBREW8088
+%endif ; MACHINE_HOMEBREW8088 or MACHINE_V50SBC
 	mov	si,msg_cpu_nec_v20
 	call	print
 
@@ -161,15 +165,15 @@ detect_cpu:
 
 
 
-.exit:
-%ifdef MACHINE_HOMEBREW8088
+.exit: 
+%ifdef MACHINE_HOMEBREW8088 or MACHINE_V50SBC
 	call	.estimate_clock
 %endif ; MACHINE_HOMEBREW8088
 	pop	si
 	pop	ax
 	ret
 
-%ifdef MACHINE_HOMEBREW8088
+%ifdef MACHINE_HOMEBREW8088 or MACHINE_V50SBC
 ; Estimate CPU clock frequency
 ; Algorithm:
 ; Run a cycle that's setup + a loop of 100 "AAA".

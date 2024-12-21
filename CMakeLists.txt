@@ -72,5 +72,8 @@ add_custom_command(
 add_executable(bios-homebrew8088.bin ${SOURCES})
 target_compile_definitions(bios-homebrew8088.bin PRIVATE MACHINE_HOMEBREW8088)
 
+add_executable(bios-V50SBC.bin ${SOURCES})
+target_compile_definitions(bios-V50SBC.bin PRIVATE MACHINE_V50SBC)
+
 add_executable(bios-xt.bin ${SOURCES})
 target_compile_definitions(bios-xt.bin PRIVATE MACHINE_XT)

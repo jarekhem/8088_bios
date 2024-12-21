@@ -30,6 +30,7 @@
 ;%define MACHINE_FE2010A 		; Faraday FE2010A
 ;%define MACHINE_BOOK8088		; Book8088
 ;%define MACHINE_HOMEBREW8088		; EMM Computers "Homebrew8088" board
+;%define MACHINE_V50SBC			; Jarosław Jabłoński V50-SBC board
 ;%define MACHINE_XT			; IBM PC/XT or highly compatible board
 					; FIXME: not implemented yet
 
@@ -101,6 +102,23 @@
 ; Specify RTC I/O address if different from the default 0x70
 ;%define AT_RTC_PORT	2A0h
 %endif ; MACHINE_HOMEBREW8088
+
+%ifdef MACHINE_V50SBC
+%define	START		0C000h		; FIXME: more ROM for development
+%define MODEL_BYTE	0FEh		; IBM PC/XT
+%define MIN_RAM_SIZE	32		; At least 32 KiB to boot the system
+%define MAX_RAM_SIZE	640		; Scan this much memory during POST
+%define RAM_TEST_BLOCK	16384		; block size for RAM test
+%define PIT_DELAY			; Use PIT polling for delays
+%define AT_KEYBOARD			; Has AT-compatible keyboard controller
+%define DISABLE_KBD_DURING_INTERRUPTS
+; Optional: Enable DS12885/DS12887 based RTC
+;%define AT_RTC				; Has AT-compatible RTC
+;%define AT_RTC_AUTODETECT		; Autodetect RTC presence
+; Specify RTC I/O address if different from the default 0x70
+;%define AT_RTC_PORT	2A0h
+%endif ; MACHINE_V50SBC
+
 
 ; Automatic settings based on the machine settings above
 %ifdef AT_RTC or AT_RTC_NVRAM or FLASH_NVRAM

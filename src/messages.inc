@@ -38,6 +38,9 @@ msg_copyright	db	0Dh, 0Ah
 %ifdef MACHINE_HOMEBREW8088
 		db	"Homebrew8088"
 %endif ; MACHINE_HOMEBREW8088
+%ifdef MACHINE_V50SBC
+		db	"V50HL-SBC"
+%endif ; MACHINE_V50SBC
 		db	" BIOS, Version "
 		db	VERSION
 		db	". "
@@ -59,7 +62,7 @@ msg_clk_9_55mhz	db	'9.55 MHz ', 00h
 msg_clk_turbo	db	'Turbo ', 00h
 %endif ; MACHINE_FE2010A
 %endif ; TURBO_MODE
-%ifdef MACHINE_HOMEBREW8088
+%ifdef MACHINE_HOMEBREW8088 or MACHINE_V50SBC
 msg_est		db      'Estimated Clock:            ',00h
 msg_mhz		db	"MHz", 00h
 msg_ticks	db	"Ticks ", 0F7h, 00h
@@ -76,6 +79,9 @@ msg_cpu_nec_v20 db      'NEC V20', 00h
 %ifdef MACHINE_HOMEBREW8088
 msg_cpu_nec_v40	db	'NEC V40', 00h
 %endif ; MACHINE_HOMEBREW8088
+%ifdef MACHINE_V50SBC
+msg_cpu_nec_v50	db	'NEC V50HL', 00h
+%endif ; MACHINE_V50SBC
 msg_fpu_present db      'Intel 8087', 0Dh, 0Ah, 00h
 %ifdef MACHINE_FE2010A
 msg_chipset	db	'Chipset:                    ', 00h

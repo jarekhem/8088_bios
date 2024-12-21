@@ -29,7 +29,7 @@ XTIDE_320=../xtide_r625/ide_xt-cf-lite_320h.bin
 
 SOURCES=bios.asm macro.inc at_kbc.inc config.inc errno.inc flash.inc floppy1.inc floppy2.inc keyboard.inc misc.inc printer1.inc printer2.inc ps2aux.inc scancode.inc serial1.inc serial2.inc setup.inc sound.inc time1.inc time2.inc video.inc cpu.inc messages.inc inttrace.inc rtc.inc fnt00-7F.inc fnt80-FF.inc
 
-IMAGES=bios-micro8088-noide.rom bios-micro8088-xtide.rom bios-sergey-xt-noide.rom bios-sergey-xt-xtide.rom bios-xi8088-noide.rom bios-xi8088-xtide.rom bios-book8088-xtide.rom bios-book8088-xtide-v20.rom bios-xt.bin bios-homebrew8088.bin
+IMAGES=bios-micro8088-noide.rom bios-micro8088-xtide.rom bios-sergey-xt-noide.rom bios-sergey-xt-xtide.rom bios-xi8088-noide.rom bios-xi8088-xtide.rom bios-book8088-xtide.rom bios-book8088-xtide-v20.rom bios-xt.bin bios-homebrew8088.bin bios-V50SBC.bin
 FLASH_IMAGE=bios-micro8088-xtide.rom
 
 all: Makefile $(SOURCES) $(IMAGES)
@@ -48,6 +48,9 @@ bios-xt.bin: $(SOURCES)
 
 bios-homebrew8088.bin: $(SOURCES)
 	nasm -DMACHINE_HOMEBREW8088 -O9 -f bin -o bios-homebrew8088.bin -l bios-homebrew8088.lst bios.asm
+
+bios-V50SBC.bin: $(SOURCES)
+	nasm -DMACHINE_V50SBC -O9 -f bin -o bios-V50SBC.bin -l bios-V50SBC.lst bios.asm
 
 bios-micro8088-noide.rom: bios-micro8088.bin
 	dd if=/dev/zero ibs=1k count=40 | LANG=C tr "\000" "\377" > bios-micro8088-noide.rom

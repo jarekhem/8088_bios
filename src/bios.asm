@@ -698,6 +698,72 @@ init_v40:
 %endif
 
 ;=========================================================================
+; init_v40 - Initialize NEC V40 built-in peripheral registers
+;-------------------------------------------------------------------------	
+%ifdef MACHINE_V50SBC
+EXWB    equ 0xFFED
+
+TCKS    equ 0xFFF0
+SBCR    equ 0xFFF1
+
+WCY1    equ 0xFFF5
+
+SCTL    equ 0xFFF7
+TULA    equ 0xFFF9
+IULA    equ 0xFFFA
+DULA    equ 0xFFFB
+OPHA    equ 0xFFFC
+OPSEL   equ 0xFFFD
+OPCN	equ 0xFFFE
+
+init_v50:
+    mov al, 0x00	; CLK/2
+    mov dx, SBCR
+    out dx, al
+
+	mov al, 0x00	; Alternative pin func
+    mov dx, OPCN
+    out dx, al
+
+    mov al, 0x03	; Internal IO: 8-bit boundary; DMA in 71037 mode
+    mov dx, SCTL
+    out dx, al
+
+    mov al, 0x00	; High periph addr
+    mov dx, OPHA
+    out dx, al
+
+	mov al, 0x07	; Enable ICU, DMAU, TCU
+    mov dx, OPSEL
+    out dx, al
+
+    mov al, 0x00	; DMA base addr
+    mov dx, DULA
+    out dx, al
+
+    mov al, 0x20	; PIC base addr
+    mov dx, IULA
+    out dx, al
+
+    mov al, 0x40	; PIT base addr
+    mov dx, TULA
+    out dx, al
+
+	mov al, 0x14
+    mov dx, TCKS
+	out dx, al
+
+	; We formerly set up the interrupt controller and timer here, but the
+	; mainline BIOS does this itself.  Removing this and the beep as soon as power on occurs
+	; frees critical ROM space if we want to do something else clever here but keep IBM BIOS alignment.
+	; Silence the static on the beeper ASAP (with 8088 card)
+	xor	al,al
+	out	ppi_pb_reg,al
+
+	jmp	post_init_v50
+%endif
+
+;=========================================================================
 ; cold_start, warm_start - BIOS POST (Power on Self Test) starts here
 ;-------------------------------------------------------------------------	
 	setloc	0E05Bh		; POST Entry Point
@@ -711,6 +777,10 @@ warm_start:
 	jmp init_v40
 	post_init_v40:
 	%endif; MACHINE_HOMEBREW8088
+	%ifdef MACHINE_V50SBC
+	jmp init_v50
+	post_init_v50:
+	%endif; MACHINE_V50SBC
 	cli				; disable interrupts
 	cld				; clear direction flag
 	mov	al,e_cpu_test
@@ -720,7 +790,7 @@ warm_start:
 ; test CPU's FLAG register
 
 	xor	ax,ax			; AX = 0
-	jb	cpu_fail
+	jb cpu_fail
 	jo	cpu_fail
 	js	cpu_fail
 	jnz	cpu_fail
