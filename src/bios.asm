@@ -753,10 +753,6 @@ init_v50:
     mov dx, TCKS
 	out dx, al
 
-	; We formerly set up the interrupt controller and timer here, but the
-	; mainline BIOS does this itself.  Removing this and the beep as soon as power on occurs
-	; frees critical ROM space if we want to do something else clever here but keep IBM BIOS alignment.
-	; Silence the static on the beeper ASAP (with 8088 card)
 	xor	al,al
 	out	ppi_pb_reg,al
 
@@ -790,7 +786,7 @@ warm_start:
 ; test CPU's FLAG register
 
 	xor	ax,ax			; AX = 0
-	jb cpu_fail
+	jb	cpu_fail
 	jo	cpu_fail
 	js	cpu_fail
 	jnz	cpu_fail
